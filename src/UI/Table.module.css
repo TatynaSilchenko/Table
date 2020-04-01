@@ -1,0 +1,29 @@
+.tableView{
+    width:100%;
+    border-collapse: collapse;
+    background-color: rgba(116, 241, 251, 0.35);
+}
+.tableHeader {
+    border: 1px solid black;
+    padding:10px
+}
+.dataRow{
+    padding: 5px;
+    padding-right: 30px;
+    border:1px solid black;
+}
+.infoBlock{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+   margin:0 auto ;
+    width:200px
+}
+.infoBlock div{
+    display: flex;
+  justify-content: flex-start;
+}
+.infoBlock span{
+    color:red;
+    padding-right: 10px;
+}

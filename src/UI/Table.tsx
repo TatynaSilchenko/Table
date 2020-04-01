@@ -8,26 +8,24 @@ interface IProps {
     visibleUsers: any,
     setUsers: Function,
     users: any,
-    setVisibleUsers: Function
+
 }
 
 interface IState {
-    sorted: any
+    sorted: any,
+    currentRow: any,
+    iscurrentRow: boolean
 }
 
 
 class Table extends React.Component<IProps, IState> {
-    constructor(props:any) {
-        super(props);
-    }
-    componentDidMount(): void {
-        this.setState({
-            sorted: {id: true, firstName: true, lastName: true, email: true, phone: true}
-        })
+    state: any = {
+        sorted: {id: true, firstName: true, lastName: true, email: true, phone: true},
+        currentRow: null,
+        iscurrentRow: false
     }
 
     sort = (type: any) => {
-        debugger
         const isSorted = this.state.sorted[type]
         let direction = isSorted ? 1 : -1;
         const sortedData = [...this.props.users].sort((a, b) => {
@@ -37,32 +35,50 @@ class Table extends React.Component<IProps, IState> {
         })
         this.state.sorted[type] = !isSorted;
         this.props.setUsers(sortedData)
-        this.props.setVisibleUsers()
     }
+    getRowData = (data: any) => {
+        this.setState({
+            currentRow: data,
+            iscurrentRow: true
+        })
+
+    }
+
 
     render() {
         const dataRow = this.props.visibleUsers.map((item: any, index: any) =>
             <DataRow id={item.id} firstName={item.firstName} lastName={item.lastName} email={item.email}
-                     phone={item.phone}/>)
+                     phone={item.phone} getRowData={this.getRowData}/>)
         return (
             <div className={style.background}>
-
                 <table className={style.tableView}>
                     <tr>
                         <th className={style.tableHeader}
-                            onClick={() => this.sort('id')}>id </th>
+                            onClick={() => this.sort('id')}>id
+                            {this.state.sorted.id ? <span>/\</span> : <span>\/</span>}</th>
                         <th className={style.tableHeader}
-                            onClick={() => this.sort('firstName')}>firstName <span>\/</span></th>
-                        <th className={style.tableHeader} onClick={() => this.sort('lastName')}>lastName <span>\/</span>
+                            onClick={() => this.sort('firstName')}>firstName
+                            {this.state.sorted.firstName ? <span>/\</span> : <span>\/</span>}</th>
+                        <th className={style.tableHeader} onClick={() => this.sort('lastName')}>lastName
+                            {this.state.sorted.lastName ? <span>/\</span> : <span>\/</span>}
                         </th>
-                        <th className={style.tableHeader} onClick={() => this.sort('email')}> email <span>\/</span></th>
-                        <th className={style.tableHeader} onClick={() => this.sort('phone')}> phone <span>\/</span></th>
+                        <th className={style.tableHeader} onClick={() => this.sort('email')}> email
+                            {this.state.sorted.email ? <span>/\</span> : <span>\/</span>}</th>
+                        <th className={style.tableHeader} onClick={() => this.sort('phone')}> phone
+                            {this.state.sorted.phone ? <span>/\</span> : <span>\/</span>}</th>
                     </tr>
                     {dataRow}
                 </table>
+                {this.state.iscurrentRow && <div className={style.infoBlock}>
+                    <div> <span>id:</span>{this.state.currentRow.id}</div>
+                    <div> <span>firstName:</span>{this.state.currentRow.firstName}</div>
+                    <div> <span>lastName:</span>{this.state.currentRow.lastName}</div>
+                    <div> <span>email:</span>{this.state.currentRow.email}</div>
+                    <div> <span>phone:</span>{this.state.currentRow.phone}</div>
+                </div>}
             </div>
         )
     }
 }
 
-export default connect(null, {setUsers, setVisibleUsers})(Table)
+export default Table
